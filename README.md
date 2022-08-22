@@ -47,3 +47,7 @@ public function imprimatur()
 ```
 
 The downloaded filename can be specified with the viewBuilder options.
+
+## Troubleshooting
+
+A `Could not close zip file /tmp/PhpWord5gJC0Z` Exception might mean that there is a problem with the template.docx file. 
