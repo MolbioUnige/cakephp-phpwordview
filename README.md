@@ -9,7 +9,7 @@ You can install this plugin into your CakePHP application using [composer](https
 The recommended way to install composer packages is:
 
 ```
-composer molbio-unige/php-word-view
+composer require molbio-unige/php-word-view
 ```
 
 ### Enable plugin
