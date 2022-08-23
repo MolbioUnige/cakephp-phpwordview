@@ -9,7 +9,7 @@ You can install this plugin into your CakePHP application using [composer](https
 The recommended way to install composer packages is:
 
 ```
-composer molbio-unige/php-word-view
+composer require molbio-unige/php-word-view
 ```
 
 ### Enable plugin
@@ -47,3 +47,7 @@ public function imprimatur()
 ```
 
 The downloaded filename can be specified with the viewBuilder options.
+
+## Troubleshooting
+
+A `Could not close zip file /tmp/PhpWord5gJC0Z` Exception might mean that there is a problem with the template.docx file have incorrect line ending. This can be solved by specifying docx files as binary in the `.gitattributes` file. 
