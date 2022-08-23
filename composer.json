@@ -8,6 +8,7 @@
         "phpoffice/phpword": "^0.18.3"
     },
     "require-dev": {
+        "cakephp/cakephp-codesniffer": "^3.0",
         "phpunit/phpunit": "^5.7.14|^6.0"
     },
     "autoload": {
@@ -20,5 +21,15 @@
             "PhpWordView\\Test\\": "tests/",
             "Cake\\Test\\": "vendor/cakephp/cakephp/tests/"
         }
+    },
+    "scripts": {
+        "check": [
+            "@cs-check",
+            "@test"
+        ],
+        "cs-check": "phpcs -p -v --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
+        "cs-fix": "phpcbf -p --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
+        "test": "phpunit",
+        "test-coverage": "phpunit --coverage-clover=clover.xml"
     }
 }

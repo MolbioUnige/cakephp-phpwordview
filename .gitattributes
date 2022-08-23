@@ -1,0 +1,3 @@
+# docx files should not be modified
+*.docx binary
+*.doc binary

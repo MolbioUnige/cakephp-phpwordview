@@ -67,16 +67,7 @@ class PhpWordView extends View
 
         parent::__construct($request, $response, $eventManager, $viewOptions);
 
-        $this->wordConfig = array_merge(
-            (array)Configure::read('PhpWord'),
-            (array)$this->wordConfig
-        );
-
         $this->response = $this->response->withType('docx');
-        $filename = isset($this->wordConfig['filename']) && is_string($this->wordConfig['filename'])
-            ? $this->wordConfig['filename']
-            : $this->getTemplate();
-        $this->response = $this->response->withDownload($filename);
 
         if (isset($viewOptions['templatePath']) && $viewOptions['templatePath'] == 'Error') {
             $this->subDir = null;
@@ -102,6 +93,11 @@ class PhpWordView extends View
      */
     public function render($view = null, $layout = null)
     {
+        $filename = isset($this->wordConfig['filename']) && is_string($this->wordConfig['filename'])
+            ? $this->wordConfig['filename']
+            : $this->getTemplate();
+        $this->response = $this->response->withDownload($filename);
+
         $serialize = $this->viewVars['_serialize'];
         ob_start();
         $templateProcessor = new TemplateProcessor($this->_getViewFileName());
