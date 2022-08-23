@@ -50,4 +50,4 @@ The downloaded filename can be specified with the viewBuilder options.
 
 ## Troubleshooting
 
-A `Could not close zip file /tmp/PhpWord5gJC0Z` Exception might mean that there is a problem with the template.docx file. 
+A `Could not close zip file /tmp/PhpWord5gJC0Z` Exception might mean that there is a problem with the template.docx file have incorrect line ending. This can be solved by specifying docx files as binary in the `.gitattributes` file. 
