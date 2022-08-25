@@ -114,7 +114,7 @@ class PhpWordView extends View
             $this->PhpWord = new PhpWord();
             $this->_ext = '.ctp';
             $content = parent::render($view, false);
-            if ($this->response->type() == 'text/html') {
+            if ($this->response->getType() == 'text/html') {
                 return $content;
             }
             $this->Blocks->set('content', $this->output());
@@ -158,7 +158,7 @@ class PhpWordView extends View
     protected function output()
     {
         $writer = IOFactory::createWriter($this->PhpWord, 'Word2007');
-        if (!isset($$writer)) {
+        if (!isset($writer)) {
             throw new Exception('Word writer not found');
         }
 

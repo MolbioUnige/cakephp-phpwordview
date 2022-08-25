@@ -54,4 +54,20 @@ class PhpWordViewTest extends TestCase
             $this->view->getResponse()->getHeaderLine('Content-Disposition')
         );
     }
+
+    /**
+     * TestRenderFull
+     */
+    public function testRenderFull()
+    {
+        $this->view->render(false);
+        $this->assertSame(
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            $this->view->getResponse()->getType()
+        );
+        $this->assertContains(
+            'filename="blank"',
+            $this->view->getResponse()->getHeaderLine('Content-Disposition')
+        );
+    }
 }
