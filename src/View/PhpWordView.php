@@ -7,6 +7,8 @@ use Cake\Event\EventManager;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\View\View;
+use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\TemplateProcessor;
 
 /**
@@ -15,7 +17,8 @@ use PhpOffice\PhpWord\TemplateProcessor;
  * By setting the 'serialize' view builder option, you can specify a view variable
  * that will replace to corresponding placeholder in the template file.
  *
- * This plugin uses only the templateRender functionnality of PhpWord.
+ * This plugin uses the templateRender functionnality of PhpWord if _serialized
+ * variable is passed, full PHPWord API otherwise.
  */
 class PhpWordView extends View
 {
@@ -46,6 +49,13 @@ class PhpWordView extends View
      * @var string
      */
     protected $_ext = '.docx';
+
+    /**
+     * PHPWord instance
+     *
+     * @var PhpWord
+     */
+    public $PhpWord = null;
 
     /**
      * Constructor
@@ -98,8 +108,29 @@ class PhpWordView extends View
             : $this->getTemplate();
         $this->response = $this->response->withDownload($filename);
 
+        if (!empty($this->viewVars['_serialize'])) {
+            return $this->serialize();
+        } else {
+            $this->PhpWord = new PhpWord();
+            $this->_ext = '.ctp';
+            $content = parent::render($view, false);
+            if ($this->response->type() == 'text/html') {
+                return $content;
+            }
+            $this->Blocks->set('content', $this->output());
+
+            return $this->Blocks->get('content');
+        }
+    }
+
+    /**
+     * Serialize view vars.
+     *
+     * @return string The serialized data
+     */
+    protected function serialize()
+    {
         $serialize = $this->viewVars['_serialize'];
-        ob_start();
         $templateProcessor = new TemplateProcessor($this->_getViewFileName());
         foreach ((array)$serialize as $viewVar) {
             if (is_scalar($this->viewVars[$viewVar])) {
@@ -110,8 +141,31 @@ class PhpWordView extends View
                 $templateProcessor->setValue($key, $value);
             }
         }
-        $templateProcessor->saveAs('php://output');
 
-        return ob_get_clean();
+        ob_start();
+        $templateProcessor->saveAs('php://output');
+        $output = ob_get_clean();
+
+        return $output;
+    }
+
+    /**
+     * Generates the binary word document
+     *
+     * @return string
+     * @throws CakeException If the word writer does not exist
+     */
+    protected function output()
+    {
+        $writer = IOFactory::createWriter($this->PhpWord, 'Word2007');
+        if (!isset($$writer)) {
+            throw new Exception('Word writer not found');
+        }
+
+        ob_start();
+        $writer->save('php://output');
+        $output = ob_get_clean();
+
+        return $output;
     }
 }
